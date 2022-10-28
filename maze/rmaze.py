@@ -17,7 +17,7 @@ current_ch = '?' # current cell
 seen_ch = '*'    # seen cell
 # here are the Cartesian shifts that give us a cell's neighbours
 #   1st position is row index, 2nd psn is column index
-nbr_offsets = [(0,-1), (0,1), (-1,0), (1,0)]
+nbr_offsets = [(0,-1),(-1,0), (1,0),(0,1)]
 
 def newstring(s,index,ch):  # replace character in string
   return s[0:index]+ch+s[index+1:]
@@ -60,13 +60,17 @@ class Maze:
   def mark_location(self,psn,ch): # used to show we have processed the cell
     self.lines[psn[0]] = newstring(self.lines[psn[0]],psn[1],ch)
 
-  def rwander(self,psn): # recursive wander
+  def rwander(self,psn,count): # recursive wander
     here_ch = self.char_at(psn)
     assert(here_ch == empty_ch or here_ch == origin_ch)
     if here_ch == empty_ch:
       self.mark_location(psn, current_ch)
       self.showpretty() # print maze, so we can watch the traversal
-      self.mark_location(psn, seen_ch)
+      if count < 10:
+        self.mark_location(psn, '0123456789'[count])
+        
+      else:
+        self.mark_location(psn, seen_ch)
     for shift in nbr_offsets:
       new_psn = psn[0]+shift[0], psn[1]+shift[1]
       new_ch = self.char_at(new_psn) # examine new_psn
@@ -74,7 +78,7 @@ class Maze:
         self.showpretty() # print maze, so we can watch the traversal
         return new_psn
       if new_ch == empty_ch:
-        rec = self.rwander(new_psn)    # recursively traverse from new_psn
+        rec = self.rwander(new_psn,count +1)    # recursively traverse from new_psn
         if rec is not None:            # did recursive call find exit?
           return rec                   # yes? rwander(self,psn) terminates
 
@@ -100,5 +104,5 @@ class Maze:
 
 maze = Maze() # Maze() calls __init__(maze) of class Maze
 startpsn = maze.find_start() # scan the maze to find the origin location
-psn = maze.rwander(startpsn) # return the value found by recursive wandering
+psn = maze.rwander(startpsn,-1) # return the value found by recursive wandering
 print('finish at location',psn) # print the destination location

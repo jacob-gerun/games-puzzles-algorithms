@@ -10,7 +10,7 @@ orgn_ch = '+'  # traversal origin
 dest_ch = '!'  # traversal destination
 seen_ch = '.'  # cell has been seen and is in queue
 done_ch = '~'  # cell has been removed from queue, processing complete
-nbr_offsets = [(0,-1), (0,1), (-1,0), (1,0)]
+nbr_offsets = [(1,0),(0,-1),(-1,0),(0,1)]
 
 def newstring(s,index,ch):  # replace character in string       
   return s[0:index]+ch+s[index+1:]
@@ -60,7 +60,7 @@ class Maze:
       # comment out one of these two lines
       #psn = fringe.pop() # pop from end of list, LIFO, stack, so DFS
       psn = fringe.popleft() # pop from front, FIFO, queue, so BFS
-      shuffle(nbr_offsets) # just for fun
+      #shuffle(nbr_offsets) # just for fun
       for shift in nbr_offsets: # do you see how this works ?
         new_psn = psn[0]+shift[0], psn[1]+shift[1]
         new_ch = self.char_at(new_psn)

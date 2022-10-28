@@ -41,13 +41,14 @@ def opponent(color):
   else: assert False, 'defined only for Black, White'
 
 def empty_board(r, c):
-  board = ''
+  board = GUARD*(c+1)         # bottom row
   for rows in range(r):
-    board += EMPTY*c  # middle rows       # top row
+    board += GUARD + EMPTY*c  # middle rows
+  board += GUARD*(c+1)        # top row
   return board
 
 def coord_to_point(r, c, C): 
-  return (C) * (r) + c 
+  return (C+1) * (r+1) + c + 1
 
 def point_to_alphanum(p, C):
   r, c = divmod(p, C+1)
@@ -150,16 +151,14 @@ class Position: # go board, each point in {B, W, E, G}
         territory = 1
         while (len(empty_points) > 0):
           q = empty_points.pop()
-          # HERE
           for j in self.nbr_offsets:
-            x = q
+            x = j+q
             b_nbr |= (self.brd[x] == BLACK)
             w_nbr |= (self.brd[x] == WHITE)
             if self.brd[x] == EMPTY and x not in empty_seen:
               empty_seen.add(x)
               empty_points.append(x)
               territory += 1
-          # TO HERE
         if   b_nbr and not w_nbr: bs += territory
         elif w_nbr and not b_nbr: ws += territory
     return bs, ws
@@ -224,7 +223,7 @@ def undo(H, p):  # undo last move
         return
 
 def interact(use_tt):
-  p = Position(3,3)
+  p = Position(1,3)
   move_record = []    # used for undo, only need locations
   positions = [p.brd] # used for positional superko
   move_made = False

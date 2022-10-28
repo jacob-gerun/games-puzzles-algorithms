@@ -194,8 +194,8 @@ def interact():
         newB = next_state(B, c)
         if newB == B:
             break
-        if r <= 10000:
-            showboard(B, r, c, ' ', pause)
+        #if r <= 10000:
+            #showboard(B, r, c, ' ', pause)
         itn += 1
         B = newB
     showboard(B, r, c, ' ', pause)
